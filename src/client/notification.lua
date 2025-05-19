@@ -128,7 +128,7 @@ function Notification:render()
         
                 dxDrawRectangle(xNotification + respc(20), yNotification + respc(40 + (v.cache.height * self.font.height) + 18), respc(334), 1, rgba(divColor.r, divColor.g, divColor.b, divColor.a * alpha))
         
-                dxDrawText(calcTimeBasedOnTick(v.cache.tick), xNotification + respc(20), yNotification + respc(40 + (v.cache.height * self.font.height) + 18 + 10), respc(334), 1, rgba(textColor.r, textColor.g, textColor.b, textColor.a * alpha), 1, self.font.message, 'left', 'top', false, true)
+                dxDrawText(calcTimeBasedOnOsTime(v.cache.time), xNotification + respc(20), yNotification + respc(40 + (v.cache.height * self.font.height) + 18 + 10), respc(334), 1, rgba(textColor.r, textColor.g, textColor.b, textColor.a * alpha), 1, self.font.message, 'left', 'top', false, true)
                 dxDrawImage(xNotification + respc(20), yNotification + respc(40 + (v.cache.height * self.font.height) + 18 + 34), respc(338), respc(4), 'public/image/bar.png', 0, 0, 0, rgba((v.type.accentColor and v.type.accentColor[1] or defaultTypeColor.r), (v.type.accentColor and v.type.accentColor[2] or defaultTypeColor.g), (v.type.accentColor and v.type.accentColor[3] or defaultTypeColor.b), 0.35 * alpha))
                 
                 local barProgress = math.min(respc(338 * ((getTickCount() - v.cache.tick) / v.time)), respc(338))
@@ -183,6 +183,7 @@ function Notification:add(message, notificationType, time, priority, tickSended)
             height = math.floor(dxGetTextWidth(message, 1, self.font.message) / respc(315)) + 1;
 
             tick = (tickSended and (tickSended + self.tickVariation) or getTickCount());
+            time = (tickSended and os.time() - ((getTickCount() - (tickSended + self.tickVariation)) / 1000) or os.time());
 
             alpha = {0, 1, getTickCount()};
             position = {

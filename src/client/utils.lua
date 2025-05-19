@@ -101,8 +101,8 @@ lerp = {
 
 local cacheCalcTime = {}
 
-function calcTimeBasedOnTick(lastTick)
-    local result = (getTickCount() - lastTick) / 1000
+function calcTimeBasedOnOsTime(lastTime)
+    local result = (os.time() - lastTime)
 
     if (not cacheCalcTime[result]) then
         local hours = math.floor(result / 3600)

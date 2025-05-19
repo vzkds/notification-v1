@@ -45,15 +45,21 @@ addEventHandler('onResourceStart', resourceRoot, function()
 end)
 
 addEventHandler('onPlayerLogin', root, function()
-    triggerClientEvent(source, 'notification:tickVariation', resourceRoot, getTickCount())
-
-    for i = 1, #notificationsRegistred do
-        local v = notificationsRegistred[#notificationsRegistred - (i - 1)]
-
-        if ((getTickCount() - v.tickSended) >= v.time) then
-            table.remove(notificationsRegistred, i)
-        else
-            triggerClientEvent(source, 'notification:add', resourceRoot, v.message, v.type, v.time, v.priority, v.tickSended)
+    setTimer(function(player)
+        if (not isElement(player)) then
+            return
         end
-    end
+
+        triggerClientEvent(player, 'notification:tickVariation', resourceRoot, getTickCount())
+
+        for i = 1, #notificationsRegistred do
+            local v = notificationsRegistred[#notificationsRegistred - (i - 1)]
+    
+            if ((getTickCount() - v.tickSended) >= v.time) then
+                table.remove(notificationsRegistred, i)
+            else
+                triggerClientEvent(player, 'notification:add', resourceRoot, v.message, v.type, v.time, v.priority, v.tickSended)
+            end
+        end    
+    end, 1000, 1, source)
 end)
