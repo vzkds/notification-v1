@@ -70,13 +70,15 @@ function Notification:render()
                 removeEventHandler('onClientRender', root, self.events.render)
             end
         else
-            if (y < screen.y) then
+            if (y < (screen.y + respc(100))) then
                 local bgHeight = ((v.cache.height * respc(self.font.height)) + respc(39 + 57))
 
                 if ((getTickCount() - v.cache.tick) >= v.time and v.cache.alpha[2] == 1) then
+                    v.cache.alpha[1] = interpolateBetween(v.cache.alpha[1], 0, 0, v.cache.alpha[2], 0, 0, (getTickCount() - v.cache.alpha[3]) / 300, 'Linear')
                     v.cache.alpha[2] = 0
                     v.cache.alpha[3] = getTickCount()
         
+                    v.cache.position.x[1] = interpolateBetween(v.cache.position.x[1], 0, 0, v.cache.position.x[2], 0, 0, (getTickCount() - v.cache.position.x[3]) / 500, 'OutQuad')
                     v.cache.position.x[2] = 0
                     v.cache.position.x[3] = getTickCount()
                 end
@@ -84,6 +86,8 @@ function Notification:render()
                 if (v.cache.position.y[2] ~= y) then
                     if (v.cache.position.y[1] == 0) then
                         v.cache.position.y[1] = y
+                    else
+                        v.cache.position.y[1] = interpolateBetween(v.cache.position.y[1], 0, 0, v.cache.position.y[2], 0, 0, (getTickCount() - v.cache.position.y[3]) / 500, 'OutQuad')
                     end
         
                     v.cache.position.y[2] = y
@@ -134,7 +138,7 @@ function Notification:render()
                 local barProgress = math.min(respc(338 * ((getTickCount() - v.cache.tick) / v.time)), respc(338))
                 dxDrawImageSection(xNotification + respc(20), yNotification + respc(40 + (v.cache.height * self.font.height) + 18 + 34), barProgress, respc(4), 0, 0, barProgress, respc(4), 'public/image/bar.png', 0, 0, 0, rgba((v.type.accentColor and v.type.accentColor[1] or defaultTypeColor.r), (v.type.accentColor and v.type.accentColor[2] or defaultTypeColor.g), (v.type.accentColor and v.type.accentColor[3] or defaultTypeColor.b), 1 * alpha))
                 
-                y = y + (bgHeight + respc(14))    
+                y = y + (bgHeight + respc(14))
             end
         end
     end
